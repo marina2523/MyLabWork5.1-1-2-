@@ -8,47 +8,60 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Lab5_1
+namespace Lab5_2
 {
-    public partial class Lab5 : Form
+    public partial class Form1 : Form
     {
-        public Lab5()
+        public Form1()
         {
             InitializeComponent();
+            timerTimeNow.Start();
         }
 
-        private void btnCalc_Click(object sender, EventArgs e)
+        private void tmrSecondumer_Tick(object sender, EventArgs e)
         {
-            int fromX = int.Parse(txtX1.Text);
-            int toX = int.Parse(txtX2.Text);
-            int fromY = int.Parse(txtY1.Text);
-            int toY = int.Parse(txtY2.Text);
-
-            if (fromX > toX) //Проверка интервала X
+            int tmp = Int32.Parse(txtSeconds.Text);
+            if (tmp == 59) //Так как в 60 это произойдет в следующий тик таймера
             {
-                MessageBox.Show("интервал должен быть от меньшего к большему");
-                txtX1.Text = "";
-                txtX2.Text = "";
+                txtMinutes.Text = (Int32.Parse(txtMinutes.Text) + 1).ToString();
+                txtSeconds.Text = "0";
+            }
+            
+            else
+            {
+                tmp += 1;
+                txtSeconds.Text = tmp.ToString();
+            }
+            
+        }
+
+        private void btnStart_Click(object sender, EventArgs e)
+        {
+            if (!tmrSecondumer.Enabled)
+            {
+                tmrSecondumer.Start();
+                tmrSecondumer.Enabled = true;
             }
 
-            if (fromY > toY) //Проверка интервала Y
+            else
             {
-                MessageBox.Show("интервал должен быть от меньшего к большему");
-                txtY1.Text = "";
-                txtY2.Text = "";
+                tmrSecondumer.Stop();
+                tmrSecondumer.Enabled = false;
             }
+            
+        }
 
-            if (fromX < toX && fromY < toY)
-            {
-                //Цикл для заполнения списка
-                for (int x = fromX; x <= toX; x++)
-                {
-                    for (int y = fromY; y <= toY; y++)
-                    {
-                        lstResult.Items.Add($"z(x,y) = {x} - {y} = {x - y}");
-                    }
-                }
-            }   
+        private void resetBtn_Click(object sender, EventArgs e)
+        {
+            tmrSecondumer.Stop();
+            tmrSecondumer.Enabled = false;
+            txtMinutes.Text = "0";
+            txtSeconds.Text = "0";
+        }
+
+        private void timerTimeNow_Tick(object sender, EventArgs e)
+        {
+            txtTimeNow.Text = DateTime.Now.ToLongTimeString();
         }
     }
 }
